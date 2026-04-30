@@ -1,0 +1,6 @@
+snowflake-connector-python
+elasticsearch
+PyYAML
+python-json-logger
+python-dotenv
+python-dateutil
