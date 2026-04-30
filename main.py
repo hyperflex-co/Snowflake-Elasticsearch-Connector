@@ -1,3 +1,4 @@
+import os
 """
 Main entrypoint for the Snowflake → Elasticsearch sync service.
 
@@ -20,10 +21,15 @@ from services.sync_service import SyncService
 from utils.logging import setup_logging
 
 
-def load_config(path="config/config.yaml"):
+def load_config(path=None):
     """
-    Load the YAML configuration file.
+    Load the YAML configuration file relative to this script's directory.
     """
+    if path is None:
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        path = os.path.join(base_dir, "config", "config.yaml")
+
+    print ("Loading config form:", path)
     with open(path, "r") as f:
         return yaml.safe_load(f)
 
