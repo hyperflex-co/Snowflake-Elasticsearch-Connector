@@ -1,5 +1,5 @@
 snowflake-connector-python
-elasticsearch
+elasticsearch==9.3.0
 PyYAML
 python-json-logger
 python-dotenv
