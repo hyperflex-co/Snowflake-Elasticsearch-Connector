@@ -42,6 +42,8 @@ class SyncService:
 
         # Extract Elasticsearch settings
         es_cfg = config["elasticsearch"]
+
+        print("ES password from config:", repr(es_cfg["password"]))
         self.elasticsearch = ElasticClient(
             host=es_cfg["host"],
             api_key=es_cfg["api_key"],
