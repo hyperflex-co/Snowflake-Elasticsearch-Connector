@@ -57,7 +57,9 @@ class SnowflakeClient:
 
             # Choose password or private key authentication
             if self.private_key:
-                params["private_key"] = self.private_key
+                with open(self.private_key, "rb") as key_file:
+                    private_key_bytes = key_file.read()
+                params["private_key"] = private_key_bytes
             else:
                 params["password"] = self.password
 
@@ -128,6 +130,8 @@ class SnowflakeClient:
 
         Returns rows in batches (generator).
         """
+        import datetime
+
         cursor = self.connection.cursor()
 
         # Convert timestamp to Snowflake-friendly string
@@ -152,12 +156,19 @@ class SnowflakeClient:
 
             # Yield each row as a dict
             for row in rows:
-                yield dict(zip(columns, row))
+                row_dict = dict(zip(columns, row))
+
+                # Normalize DATE → DATETIME
+                ts = row_dict[timestamp_column]
+                if isinstance(ts, datetime.date) and not isinstance(ts, datetime.datetime):
+                    ts = datetime.datetime.combine(ts, datetime.time.min)
+                    row_dict[timestamp_column] = ts
+
+                yield row_dict
 
             # Update last_ts_str to the newest row's timestamp
-            last_ts_str = rows[-1][columns.index(timestamp_column)].strftime(
-                "%Y-%m-%d %H:%M:%S"
-            )
+            newest_ts = row_dict[timestamp_column]
+            last_ts_str = newest_ts.strftime("%Y-%m-%d %H:%M:%S")
 
     def fetch_full_table(self, table, batch_size=5000):
         """

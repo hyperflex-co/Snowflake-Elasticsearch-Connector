@@ -15,36 +15,32 @@ class ElasticClient:
     """
 
     def __init__(self, host, api_key=None, username=None, password=None, timeout=30, logger=None):
-        """
-        Initialize the Elasticsearch client.
+        print("Elasticsearch host param:", repr(host))
 
-        host: URL of the Elasticsearch cluster (e.g., "http://localhost:9200")
-        api_key: API key for Elastic Cloud (optional)
-        username/password: Basic auth for local clusters (optional)
-        timeout: request timeout in seconds
-        logger: optional logger instance
-        """
         self.logger = logger or logging.getLogger("ElasticClient")
 
-        # Base connection settings
-        params = {
-            "timeout": timeout,
-            "max_retries": 5,          # retry failed requests
-            "retry_on_timeout": True,  # retry if ES takes too long
-        }
-
-        # Choose authentication method
+        # Build the client for Elasticsearch 9.x
         if api_key:
-            params["api_key"] = api_key
-            params["hosts"] = [host]
-        elif username and password:
-            params["basic_auth"] = (username, password)
-            params["hosts"] = [host]
+            self.es = Elasticsearch(
+                hosts=[host],
+                api_key=api_key,
+                verify_certs=False,
+                ssl_show_warn=False,
+                ssl_assert_hostname=False,
+                ssl_assert_fingerprint=None,
+                ca_certs=None,
+            )
         else:
-            raise ValueError("Elasticsearch requires either api_key or username/password")
+            self.es = Elasticsearch(
+                hosts=[host],
+                basic_auth=(username, password),
+                verify_certs=False,
+                ssl_show_warn=False,
+                ssl_assert_hostname=False,
+                ssl_assert_fingerprint=None,
+                ca_certs=None,
+            )
 
-        # Create the actual Elasticsearch client
-        self.es = Elasticsearch(**params)
 
     def ping(self):
         """
