@@ -11,7 +11,7 @@ This connector is designed to be:
 
 ---
 
-## 🚀 Features
+## Features
 
 - **Incremental sync** using a timestamp column  
 - **Snowflake ingestion** via `snowflake-connector-python`  
