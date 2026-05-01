@@ -1,0 +1,40 @@
+# -------------------------
+# CONFIG & SECRETS
+# -------------------------
+config/config.yaml
+*.pem
+*.p8
+*.key
+*.der
+*.crt
+*.csr
+.env
+
+# -------------------------
+# RUNTIME STATE
+# -------------------------
+state/state.json
+
+# -------------------------
+# PYTHON BUILD / CACHE
+# -------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+
+# -------------------------
+# VIRTUAL ENVIRONMENTS
+# -------------------------
+.venv/
+venv/
+env/
+
+# -------------------------
+# OS / EDITOR FILES
+# -------------------------
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
